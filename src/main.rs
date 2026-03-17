@@ -3,7 +3,7 @@ use logs::{debug, Logs};
 use std::env;
 
 use crate::{
-    data::{db::create_pool, repository::TodoRepositoryImpl},
+    data::{db, repository::TodoRepositoryImpl},
     presentation::routes::create_router,
 };
 
@@ -35,10 +35,12 @@ async fn main() {
     );
 
     debug!("Creating database connection pool");
-    let pool = create_pool(&database_url).await;
+    let db_connection = db::connect_to_db(&database_url)
+        .await
+        .expect("Failed to connect to database");
 
     debug!("Creating repository and router");
-    let repo = TodoRepositoryImpl::new(pool);
+    let repo = TodoRepositoryImpl::new(db_connection);
     let router = create_router(repo);
 
     let server_address = format!("{}:{}", bind_address, port);
