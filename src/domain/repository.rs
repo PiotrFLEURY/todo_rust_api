@@ -4,6 +4,9 @@ use axum::async_trait;
 
 use crate::domain::models::{NewTodo, Todo, UpdateTodo};
 
+#[cfg(test)]
+use mockall::{automock, predicate::*};
+#[cfg_attr(test, automock)]
 #[async_trait]
 pub trait TodoRepository: Send + Sync {
     ///
