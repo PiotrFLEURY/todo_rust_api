@@ -22,3 +22,159 @@ pub fn create_router<R: TodoRepository + Clone + 'static>(repo: R) -> Router {
         .route("/todos/:id", delete(handlers::delete_todo::<R>))
         .with_state(repo)
 }
+
+#[cfg(test)]
+mod tests {
+    use std::error::Error;
+
+    use axum::{
+        async_trait,
+        body::Body,
+        http::{Request, StatusCode},
+    };
+    use tower::ServiceExt;
+
+    use crate::domain::{models::Todo, repository::TodoRepository};
+
+    use super::*;
+
+    #[derive(Clone)]
+    struct TestRepo;
+
+    #[async_trait]
+    impl TodoRepository for TestRepo {
+        async fn create_todo(
+            &self,
+            new_todo: &crate::domain::models::NewTodo,
+        ) -> Result<Todo, Box<dyn Error>> {
+            Ok(Todo {
+                id: 1,
+                title: new_todo.title.clone(),
+                completed: new_todo.completed.unwrap_or(false),
+            })
+        }
+
+        async fn get_todos(&self) -> Result<Vec<Todo>, Box<dyn Error>> {
+            Ok(vec![])
+        }
+
+        async fn get_todo(&self, id: &i32) -> Result<Option<Todo>, Box<dyn Error>> {
+            Ok(Some(Todo {
+                id: *id,
+                title: "Test Todo".to_string(),
+                completed: false,
+            }))
+        }
+
+        async fn update_todo(
+            &self,
+            id: &i32,
+            update_todo: &crate::domain::models::UpdateTodo,
+        ) -> Result<Option<Todo>, Box<dyn Error>> {
+            Ok(Some(Todo {
+                id: *id,
+                title: "Test Todo".to_string(),
+                completed: update_todo.completed,
+            }))
+        }
+
+        async fn delete_todo(&self, _id: &i32) -> Result<(), Box<dyn Error>> {
+            Ok(())
+        }
+    }
+
+    #[tokio::test]
+    async fn test_post_todos_route() {
+        // GIVEN
+        let app = create_router(TestRepo);
+
+        let payload = r#"{"title":"Test Todo","completed":false}"#;
+
+        let request = Request::builder()
+            .method("POST")
+            .uri("/todos")
+            .header("content-type", "application/json")
+            .body(Body::from(payload.to_string()))
+            .unwrap();
+
+        // WHEN
+        let response = app.oneshot(request).await.unwrap();
+
+        // THEN
+        assert_eq!(response.status(), StatusCode::OK);
+    }
+
+    #[tokio::test]
+    async fn test_get_todos_route() {
+        // GIVEN
+        let app = create_router(TestRepo);
+
+        let request = Request::builder()
+            .method("GET")
+            .uri("/todos")
+            .body(Body::empty())
+            .unwrap();
+
+        // WHEN
+        let response = app.oneshot(request).await.unwrap();
+
+        // THEN
+        assert_eq!(response.status(), StatusCode::OK);
+    }
+
+    #[tokio::test]
+    async fn test_get_todo_route() {
+        // GIVEN
+        let app = create_router(TestRepo);
+
+        let request = Request::builder()
+            .method("GET")
+            .uri("/todos/1")
+            .body(Body::empty())
+            .unwrap();
+
+        // WHEN
+        let response = app.oneshot(request).await.unwrap();
+
+        // THEN
+        assert_eq!(response.status(), StatusCode::OK);
+    }
+
+    #[tokio::test]
+    async fn test_put_todo_route() {
+        // GIVEN
+        let app = create_router(TestRepo);
+
+        let payload = r#"{"completed":true}"#;
+        let request = Request::builder()
+            .method("PUT")
+            .uri("/todos/1")
+            .header("content-type", "application/json")
+            .body(Body::from(payload.to_string()))
+            .unwrap();
+
+        // WHEN
+        let response = app.oneshot(request).await.unwrap();
+
+        // THEN
+        assert_eq!(response.status(), StatusCode::OK);
+    }
+
+    #[tokio::test]
+    async fn test_delete_todo_route() {
+        // GIVEN
+        let app = create_router(TestRepo);
+
+        let request = Request::builder()
+            .method("DELETE")
+            .uri("/todos/1")
+            .body(Body::empty())
+            .unwrap();
+
+        // WHEN
+        let response = app.oneshot(request).await.unwrap();
+
+        // THEN
+        assert_eq!(response.status(), StatusCode::NO_CONTENT);
+    }
+}
