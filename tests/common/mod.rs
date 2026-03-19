@@ -23,14 +23,23 @@ impl TestContext {
     }
 }
 
-pub async fn setup() -> Result<TestContext, Box<dyn std::error::Error>> {
+///
+/// Utils to setup logs when coding tests.
+///
+/// /!\ Do not init logs in every tests. It will make tests panic because of multiple initialization.
+/// You can init logs in a single test and it will work for all tests because logs are global.
+///
+#[allow(dead_code)]
+pub fn init_logs() {
     Logs::new()
         // Show log level color
         .color(true)
         // Filter log level
         .level(logs::LevelFilter::Trace)
         .init();
+}
 
+pub async fn setup() -> Result<TestContext, Box<dyn std::error::Error>> {
     // Create postgres container
     let container_port = 5432.tcp();
     let container = GenericImage::new("postgres", "16")
