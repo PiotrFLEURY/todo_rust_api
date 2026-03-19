@@ -59,3 +59,27 @@ See `db/tables.sql` for the SQL commands to create the necessary tables.
 ## Tools
 
 Some test http requests can be found in the `tools` directory, which can be used to interact with the API endpoints for testing purposes.
+
+## Tests
+
+To run the tests, use the following command:
+
+```bash
+cargo test
+```
+
+### Unit Tests
+
+Unit tests are located in the same files as the code they test, using the `#[cfg(test)]` attribute.
+
+### Integration Tests
+
+Integration tests are located in the `tests` directory and can be run using the same `cargo test` command.
+
+> Note: Integration tests use `testcontainers` to create a temporary database instance for testing purposes. Ensure you have Docker installed and running on your machine to use this feature.
+
+**End to End**
+
+Integration tests uses `tower` to make http requests to the API endpoints and verify the responses. The tests are designed to cover the entire flow of creating, retrieving, updating, and deleting todo items.
+
+Since the tests uses http requests to test the API endpoints through all the layers of the application, they are considered end-to-end tests.
