@@ -2,14 +2,10 @@ use dotenv::dotenv;
 use logs::{debug, Logs};
 use std::env;
 
-use crate::{
+use todo_rust_api::{
     data::{db, repository::TodoRepositoryImpl},
     presentation::routes::create_router,
 };
-
-mod data;
-mod domain;
-mod presentation;
 
 #[tokio::main]
 async fn main() {
@@ -35,7 +31,7 @@ async fn main() {
     );
 
     debug!("Creating database connection pool");
-    let db_connection = db::connect_to_db(&database_url)
+    let db_connection = db::connect_to_db(&database_url, false)
         .await
         .expect("Failed to connect to database");
 
