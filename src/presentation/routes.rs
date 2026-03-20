@@ -1,7 +1,10 @@
 use crate::domain::repository::TodoRepository;
+use crate::presentation::api::ApiDoc;
 use crate::presentation::handlers;
 use axum::routing::{delete, get, post, put};
 use axum::Router;
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
 ///
 /// Creates the router for the application, defining the routes and their corresponding handlers.
@@ -15,11 +18,12 @@ use axum::Router;
 ///
 pub fn create_router<R: TodoRepository + Clone + 'static>(repo: R) -> Router {
     Router::new()
+        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()))
         .route("/todos", post(handlers::create_todo::<R>))
         .route("/todos", get(handlers::get_todos::<R>))
-        .route("/todos/:id", get(handlers::get_todo::<R>))
-        .route("/todos/:id", put(handlers::update_todo::<R>))
-        .route("/todos/:id", delete(handlers::delete_todo::<R>))
+        .route("/todos/{id}", get(handlers::get_todo::<R>))
+        .route("/todos/{id}", put(handlers::update_todo::<R>))
+        .route("/todos/{id}", delete(handlers::delete_todo::<R>))
         .with_state(repo)
 }
 
@@ -27,8 +31,8 @@ pub fn create_router<R: TodoRepository + Clone + 'static>(repo: R) -> Router {
 mod tests {
     use std::error::Error;
 
+    use async_trait::async_trait;
     use axum::{
-        async_trait,
         body::Body,
         http::{Request, StatusCode},
     };

@@ -1,9 +1,8 @@
 use std::error::Error;
 
-use axum::async_trait;
-
 use crate::domain::models::{NewTodo, Todo, UpdateTodo};
 
+use async_trait::async_trait;
 #[cfg(test)]
 use mockall::{automock, predicate::*};
 #[cfg_attr(test, automock)]

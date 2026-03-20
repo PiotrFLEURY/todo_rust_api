@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use axum::async_trait;
+use async_trait::async_trait;
 use sea_orm::ActiveModelTrait;
 use sea_orm::ActiveValue::NotSet;
 use sea_orm::ActiveValue::Set;

@@ -82,4 +82,14 @@ Integration tests are located in the `tests` directory and can be run using the 
 
 Integration tests uses `tower` to make http requests to the API endpoints and verify the responses. The tests are designed to cover the entire flow of creating, retrieving, updating, and deleting todo items.
 
-Since the tests uses http requests to test the API endpoints through all the layers of the application, they are considered end-to-end tests.
+Since the tests use http requests to test the API endpoints through all the layers of the application, they are considered end-to-end tests.
+
+## API Documentation
+
+The API documentation is generated using `utoipa` and can be accessed at `http://localhost:8080/swagger-ui` after running the application. This provides an interactive interface to explore and test the API endpoints.
+
+See `src/presentation/api.rs` for the configuration of the API documentation.
+
+See `src/presentation/routes.rs` for the routes configuration, which includes the integration of the Swagger UI for API documentation.
+
+See `src/presentation/handlers.rs` for the implementation of the API handlers, which are responsible for processing the incoming requests and returning the appropriate responses.
