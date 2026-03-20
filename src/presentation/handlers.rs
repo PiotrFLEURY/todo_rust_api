@@ -5,6 +5,15 @@ use axum::http::StatusCode;
 use axum::{extract::State, Json};
 use logs::{debug, error, trace};
 
+#[utoipa::path(
+    post,
+    path = "/todos",
+    request_body = NewTodo,
+    responses(
+        (status = 200, description = "Todo created successfully", body = Todo),
+        (status = 500, description = "Internal server error")
+    )
+)]
 pub async fn create_todo<R: TodoRepository>(
     State(repo): State<R>,
     Json(new_todo): Json<NewTodo>,
@@ -18,6 +27,14 @@ pub async fn create_todo<R: TodoRepository>(
     Ok(Json(todo))
 }
 
+#[utoipa::path(
+    get,
+    path = "/todos",
+    responses(
+        (status = 200, description = "Todos fetched successfully", body = [Todo]),
+        (status = 500, description = "Internal server error")
+    )
+)]
 pub async fn get_todos<R: TodoRepository>(
     State(repo): State<R>,
 ) -> Result<Json<Vec<Todo>>, StatusCode> {
@@ -30,6 +47,15 @@ pub async fn get_todos<R: TodoRepository>(
     Ok(Json(todos))
 }
 
+#[utoipa::path(
+    get,
+    path = "/todos/{id}",
+    responses(
+        (status = 200, description = "Todo fetched successfully", body = Todo),
+        (status = 404, description = "Todo not found"),
+        (status = 500, description = "Internal server error")
+    )
+)]
 pub async fn get_todo<R: TodoRepository>(
     State(repo): State<R>,
     Path(id): Path<i32>,
@@ -51,6 +77,16 @@ pub async fn get_todo<R: TodoRepository>(
     }
 }
 
+#[utoipa::path(
+    put,
+    path = "/todos/{id}",
+    request_body = UpdateTodo,
+    responses(
+        (status = 200, description = "Todo updated successfully", body = Todo),
+        (status = 404, description = "Todo not found"),
+        (status = 500, description = "Internal server error")
+    )
+)]
 pub async fn update_todo<R: TodoRepository>(
     State(repo): State<R>,
     Path(id): Path<i32>,
@@ -73,6 +109,14 @@ pub async fn update_todo<R: TodoRepository>(
     }
 }
 
+#[utoipa::path(
+    delete,
+    path = "/todos/{id}",
+    responses(
+        (status = 204, description = "Todo deleted successfully"),
+        (status = 500, description = "Internal server error")
+    )
+)]
 pub async fn delete_todo<R: TodoRepository>(
     State(repo): State<R>,
     Path(id): Path<i32>,
