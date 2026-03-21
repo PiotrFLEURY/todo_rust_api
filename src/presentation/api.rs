@@ -2,6 +2,9 @@ use utoipa::OpenApi;
 
 #[derive(OpenApi)]
 #[openapi(
+    tags(
+        (name = "Todo API", description = "API for managing todo items")
+    ),
     paths(
         crate::presentation::handlers::create_todo,
         crate::presentation::handlers::get_todos,
