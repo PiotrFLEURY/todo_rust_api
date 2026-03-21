@@ -3,7 +3,7 @@ use std::time::{Duration, Instant};
 use axum::Router;
 use logs::Logs;
 use testcontainers::{
-    core::{ExecCommand, IntoContainerPort, WaitFor},
+    core::{IntoContainerPort, WaitFor},
     runners::AsyncRunner,
     ContainerAsync, GenericImage, ImageExt,
 };
@@ -77,23 +77,13 @@ pub async fn setup() -> Result<TestContext, Box<dyn std::error::Error>> {
         }
     }
 
-    // Create table
-    container
-        .exec(ExecCommand::new(
-            vec![
-                "psql",
-                "-U",
-                "postgres",
-                "-c",
-                "CREATE TABLE IF NOT EXISTS todos (id SERIAL PRIMARY KEY, title TEXT NOT NULL, completed BOOLEAN NOT NULL);",
-            ]
-        ))
-             .await
-        .expect("Failed to create table");
-
     let db_connection = db::connect_to_db(&database_url, true)
         .await
         .expect("Failed to connect to database");
+
+    db::update_db(&db_connection)
+        .await
+        .expect("Failed to update database schema");
 
     let todo_repository = TodoRepositoryImpl::new(db_connection);
 

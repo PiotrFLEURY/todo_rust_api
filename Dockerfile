@@ -11,6 +11,8 @@ FROM debian:12-slim
 WORKDIR /app
 
 COPY --from=builder /sources/target/release/todo_rust_api .
+COPY --from=builder /sources/target/release/update_db .
+COPY --from=builder /sources/db ./db
 
 # Install necessary runtime dependencies
 RUN apt-get update && \
@@ -24,4 +26,4 @@ USER appuser
 
 EXPOSE 8080
 
-CMD ["./todo_rust_api"]
+CMD ["sh", "-c", "./update_db && ./todo_rust_api"]

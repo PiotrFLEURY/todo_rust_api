@@ -3568,7 +3568,6 @@ dependencies = [
  "sea-orm",
  "serde",
  "serde_json",
- "sqlx",
  "testcontainers",
  "tokio",
  "tower",
