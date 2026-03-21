@@ -129,3 +129,14 @@ A GitHub Actions workflow is set up to run the tests on every push to the main b
 
 A GitHub Actions workflow is set up to build and push the Docker image to GitHub Container Registry (GHCR) on every push to the main branch. The workflow is defined in `.github/workflows/docker.yml`.
 
+## Database Migrations
+
+Database migrations are handled using a custom Rust binary located in `bin/update_db.rs`. This binary is responsible for applying the necessary database schema updates before the application starts.
+
+This binary will search for SQL files in the `db` directory and execute them against the configured database. This allows you to manage your database schema changes in a structured way.
+
+To run the database migrations, you can execute the `update_db` binary directly:
+
+```bash
+cargo run --bin update_db
+```
