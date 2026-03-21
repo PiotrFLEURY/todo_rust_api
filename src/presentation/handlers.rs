@@ -6,6 +6,7 @@ use axum::{extract::State, Json};
 use logs::{debug, error, trace};
 
 #[utoipa::path(
+    tag = "Todo API",
     post,
     path = "/todos",
     request_body = NewTodo,
@@ -28,6 +29,7 @@ pub async fn create_todo<R: TodoRepository>(
 }
 
 #[utoipa::path(
+    tag = "Todo API",
     get,
     path = "/todos",
     responses(
@@ -48,6 +50,7 @@ pub async fn get_todos<R: TodoRepository>(
 }
 
 #[utoipa::path(
+    tag = "Todo API",
     get,
     path = "/todos/{id}",
     responses(
@@ -78,6 +81,7 @@ pub async fn get_todo<R: TodoRepository>(
 }
 
 #[utoipa::path(
+    tag = "Todo API",
     put,
     path = "/todos/{id}",
     request_body = UpdateTodo,
@@ -110,6 +114,7 @@ pub async fn update_todo<R: TodoRepository>(
 }
 
 #[utoipa::path(
+    tag = "Todo API",
     delete,
     path = "/todos/{id}",
     responses(
