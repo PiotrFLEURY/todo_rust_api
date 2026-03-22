@@ -14,6 +14,36 @@ This is a simple Todo API implemented in Rust using the Clean Architecture princ
 - Rust
 - A database (e.g., PostgreSQL)
 
+## Dependencies
+
+All dependencies are listed in the `Cargo.toml` file. Below is a summary of the main dependencies used in this project.
+
+Go to [crates.io](https://crates.io/) for more information about each dependency and its usage.
+
+### Main Dependencies
+
+| Dependency            | Description                                                                           | URL                                                               |
+|-----------------------|---------------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| `axum`                | A web framework for building APIs in Rust.                                            | [axum](https://crates.io/crates/axum)                             |
+| `dotenv`              | A crate for loading environment variables from a `.env` file.                         | [dotenv](https://crates.io/crates/dotenv)                         |
+| `logs`                | A crate for logging in Rust                                                           | [logs](https://crates.io/crates/logs)                             |
+| `sea-orm`             | An ORM for Rust that provides a high-level API for interacting with databases.        | [sea-orm](https://crates.io/crates/sea-orm)                       |
+| `serde`               | A framework for serializing and deserializing Rust data structures.                   | [serde](https://crates.io/crates/serde)                           |
+| `serde_json`          | A crate for working with JSON data in Rust                                            | [serde_json](https://crates.io/crates/serde_json)                 |
+| `tokio`               | An asynchronous runtime for Rust                                                      | [tokio](https://crates.io/crates/tokio)                           |
+| `utoipa`              | A crate for generating OpenAPI documentation from Rust code.                          | [utoipa](https://crates.io/crates/utoipa)                         |
+| `utoipa-swagger-ui`   | A crate for serving Swagger UI.                                                       | [utoipa-swagger-ui](https://crates.io/crates/utoipa-swagger-ui)   |
+| `async-trait`         | A crate that allows you to define async functions in traits.                          | [async-trait](https://crates.io/crates/async-trait)               |
+
+
+### Dev Dependencies
+
+| Dependency            | Description                                                           | URL                                                       |
+|-----------------------|-----------------------------------------------------------------------|-----------------------------------------------------------|
+| `mockall`             | A crate for creating mock objects in Rust.                            | [mockall](https://crates.io/crates/mockall)               |
+| `tower`               | Utility crate used for integration testing.                           | [tower](https://crates.io/crates/tower)                   |
+| `testcontainers`      | A crate for running Docker containers database in integration tests.  | [testcontainers](https://crates.io/crates/testcontainers) |
+
 ## Getting Started
 
 ### Configuration
